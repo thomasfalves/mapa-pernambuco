@@ -1,7 +1,7 @@
 // ================= MAPA =================
 const map = L.map("map", {
   zoomControl: true,
-  tap: true
+  tap: true,
 }).setView([-8.5, -37.5], 6);
 
 // PANES
@@ -15,7 +15,7 @@ map.getPane("estados").style.zIndex = 700;
 // TILE
 L.tileLayer("https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png", {
   pane: "base",
-  maxZoom: 18
+  maxZoom: 18,
 }).addTo(map);
 
 // MOBILE FIX
@@ -45,14 +45,14 @@ const normal = {
   color: "#6b7280",
   weight: 0.7,
   fillColor: "#cfe4ff",
-  fillOpacity: 0.45
+  fillOpacity: 0.45,
 };
 
 const selecionado = {
   color: "#1f4fd8",
   weight: 2,
   fillColor: "#60a5fa",
-  fillOpacity: 0.65
+  fillOpacity: 0.65,
 };
 
 // ================= RESTAURAR PROGRESSO =================
@@ -61,27 +61,42 @@ function carregarProgresso() {
   if (!salvo) return;
 
   const dados = JSON.parse(salvo);
-
   kmTotal = dados.kmTotal || 0;
-  (dados.municipios || []).forEach(id => municipiosSelecionados.add(id));
-  (dados.estados || []).forEach(uf => estadosVisitados.add(uf));
+
+  (dados.municipios || []).forEach((id) => municipiosSelecionados.add(id));
 }
 
 // ================= SALVAR =================
 function salvarProgresso() {
-  localStorage.setItem("curados_progresso", JSON.stringify({
-    kmTotal,
-    municipios: [...municipiosSelecionados],
-    estados: [...estadosVisitados]
-  }));
+  localStorage.setItem(
+    "curados_progresso",
+    JSON.stringify({
+      kmTotal,
+      municipios: [...municipiosSelecionados],
+      estados: [...estadosVisitados],
+    })
+  );
+}
+
+// ================= RECALCULAR ESTADOS =================
+function recalcularEstados() {
+  estadosVisitados.clear();
+
+  layersMunicipios.forEach((layer) => {
+    if (layer._selected) {
+      estadosVisitados.add(layer._uf);
+    }
+  });
 }
 
 // ================= PAINEL =================
 function atualizarPainel() {
+  recalcularEstados();
+
   totalCidadesEl.textContent = municipiosSelecionados.size;
   totalEstadosEl.textContent = estadosVisitados.size;
 
-  const peVisitadas = municipiosPE.filter(m => m._selected).length;
+  const peVisitadas = municipiosPE.filter((m) => m._selected).length;
   peVisitadasEl.textContent = peVisitadas;
   peFaltamEl.textContent = TOTAL_PE - peVisitadas;
   pePercentualEl.textContent =
@@ -93,8 +108,8 @@ function atualizarPainel() {
 // ================= MUNICÍPIOS =================
 function carregarMunicipios(arquivo, uf) {
   fetch(arquivo)
-    .then(r => r.json())
-    .then(data => {
+    .then((r) => r.json())
+    .then((data) => {
       L.geoJSON(data, {
         pane: "municipios",
         style: normal,
@@ -118,7 +133,6 @@ function carregarMunicipios(arquivo, uf) {
 
             if (layer._selected) {
               municipiosSelecionados.add(id);
-              estadosVisitados.add(uf);
             } else {
               municipiosSelecionados.delete(id);
             }
@@ -126,7 +140,7 @@ function carregarMunicipios(arquivo, uf) {
             atualizarPainel();
             salvarProgresso();
           });
-        }
+        },
       }).addTo(map);
 
       atualizarPainel();
@@ -143,24 +157,30 @@ carregarMunicipios("data/municipios/al_municipios.geojson", "AL");
 carregarMunicipios("data/municipios/se_municipios.geojson", "SE");
 carregarMunicipios("data/municipios/pi_municipios.geojson", "PI");
 carregarMunicipios("data/municipios/ce_municipios.geojson", "CE");
+carregarMunicipios("data/municipios/pb_municipios.geojson", "PB");
+carregarMunicipios("data/municipios/rn_municipios.geojson", "RN");
+carregarMunicipios("data/municipios/pi_municipios.geojson", "PI");
+carregarMunicipios("data/municipios/ma_municipios.geojson", "MA");
+
+
 
 // ================= BORDAS =================
 fetch("data/estados/nordeste_ufs.geojson")
-  .then(r => r.json())
-  .then(data => {
+  .then((r) => r.json())
+  .then((data) => {
     L.geoJSON(data, {
       pane: "estados",
       interactive: false,
-      style: f => ({
+      style: (f) => ({
         color: f.properties.SIGLA_UF === "PE" ? "#0b1f44" : "#4b5563",
         weight: f.properties.SIGLA_UF === "PE" ? 4 : 2,
-        fillOpacity: 0
-      })
+        fillOpacity: 0,
+      }),
     }).addTo(map);
   });
 
 // ================= KM =================
-kmInput.addEventListener("keydown", e => {
+kmInput.addEventListener("keydown", (e) => {
   if (e.key === "Enter" && kmInput.value > 0) {
     kmTotal += Number(kmInput.value);
     kmInput.value = "";
@@ -184,12 +204,21 @@ document.getElementById("btnReset").onclick = () => {
 };
 
 document.getElementById("btnExport").onclick = () => {
-  const blob = new Blob([JSON.stringify({
-    kmTotal,
-    municipios: [...municipiosSelecionados],
-    estados: [...estadosVisitados],
-    data: new Date().toISOString()
-  }, null, 2)], { type: "application/json" });
+  const blob = new Blob(
+    [
+      JSON.stringify(
+        {
+          kmTotal,
+          municipios: [...municipiosSelecionados],
+          estados: [...estadosVisitados],
+          data: new Date().toISOString(),
+        },
+        null,
+        2
+      ),
+    ],
+    { type: "application/json" }
+  );
 
   const a = document.createElement("a");
   a.href = URL.createObjectURL(blob);
