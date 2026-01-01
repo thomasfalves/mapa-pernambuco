@@ -1,72 +1,54 @@
 <!DOCTYPE html>
 <html lang="pt-BR">
-  <head>
-    <meta charset="UTF-8" />
-    <title>Curados Pelo Vento</title>
+<head>
+  <meta charset="UTF-8">
+  <title>Curados Pelo Vento</title>
 
-    <link
-      rel="stylesheet"
-      href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css"
-    />
-    <link rel="stylesheet" href="style.css" />
-  </head>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
 
-  <body>
-    <div id="map"></div>
+  <link
+    rel="stylesheet"
+    href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css"
+  />
+  <link rel="stylesheet" href="style.css">
+</head>
 
-    <div id="painel">
-      <table class="tabela">
-        <tr>
-          <th colspan="2">Viajens Curados Pelo Vento</th>
-        </tr>
-        <tr>
-          <td>Cidades Visitadas</td>
-          <td id="totalCidades">0</td>
-        </tr>
-        <tr>
-          <td>Estados Visitados</td>
-          <td id="totalEstados">0</td>
-        </tr>
-        <tr>
-          <td>Digite rodados</td>
-          <td><input id="kmInput" type="number" placeholder="Km + Enter" /></td>
-        </tr>
-        <tr>
-          <td>Km Total</td>
-          <td>
-            <strong><span id="kmTotal">0</span> km</strong>
-          </td>
-        </tr>
-      </table>
+<body>
 
-      <br />
+  <div id="map"></div>
 
-      <table class="tabela">
-        <tr>
-          <th colspan="2">Desafio Valente Fazedor de Chuva</th>
-        </tr>
-        <tr>
-          <td>Cidades Visitadas</td>
-          <td id="peVisitadas">0</td>
-        </tr>
-        <tr>
-          <td>Total de Cidade</td>
-          <td>186</td>
-        </tr>
-        <tr>
-          <td>Faltam</td>
-          <td id="peFaltam">186</td>
-        </tr>
-        <tr>
-          <td>Porcentagem do Desafio</td>
-          <td><strong id="pePercentual">0%</strong></td>
-        </tr>
-      </table>
+  <div id="painel">
+    <table class="tabela">
+      <tr><th colspan="2">Viagens Curados Pelo Vento</th></tr>
+      <tr><td>Cidades Visitadas</td><td id="totalCidades">0</td></tr>
+      <tr><td>Estados Visitados</td><td id="totalEstados">0</td></tr>
+      <tr>
+        <td>Digite rodados</td>
+        <td><input id="kmInput" type="number" placeholder="Km + Enter"></td>
+      </tr>
+      <tr><td>Km Total</td><td><strong><span id="kmTotal">0</span> km</strong></td></tr>
+    </table>
+
+    <br>
+
+    <table class="tabela">
+      <tr><th colspan="2">Desafio Valente Fazedor de Chuva</th></tr>
+      <tr><td>Cidades Visitadas</td><td id="peVisitadas">0</td></tr>
+      <tr><td>Total de Cidades</td><td>186</td></tr>
+      <tr><td>Faltam</td><td id="peFaltam">186</td></tr>
+      <tr><td>Porcentagem</td><td><strong id="pePercentual">0%</strong></td></tr>
+    </table>
+
+    <div class="acoes">
+      <button id="btnFullscreen">Tela cheia</button>
+      <button id="btnReset">Resetar viagem</button>
+      <button id="btnExport">Exportar progresso</button>
     </div>
+  </div>
 
-    <script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js"></script>
-    <script src="script.js"></script>
-  </body>
+  <button id="togglePainel">☰ Painel</button>
 
-  
+  <script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js"></script>
+  <script src="script.js"></script>
+</body>
 </html>
