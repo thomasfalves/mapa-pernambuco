@@ -22,7 +22,7 @@ L.tileLayer("https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png", {
 setTimeout(() => map.invalidateSize(), 500);
 
 // ================= VARIÁVEIS =================
-const TOTAL_PE = 186;
+const TOTAL_PE = 184;
 let kmTotal = 0;
 
 const municipiosSelecionados = new Set();
